@@ -34,6 +34,18 @@ app.get('/api/users', (req, res) => {
   return res.json(users);
 });
 
+app.get('/api/users/:id', (req, res) => {
+  const { id } = req.params;
+
+  const user = users.find((user) => user.id === parseInt(id));
+
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  } else {
+    return res.json(user);
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

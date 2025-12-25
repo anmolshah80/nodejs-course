@@ -5,3 +5,5 @@
 - Create `/users` endpoint to send the HTML for users data mapped in `ul` and `li` elements
 
 - Create `/api/users` REST API endpoint to fetch the JSON data from `data/MOCK_DATA.json`
+
+- Create `/api/users/:id` REST API endpoint to fetch the JSON data of the user with specified user ID
