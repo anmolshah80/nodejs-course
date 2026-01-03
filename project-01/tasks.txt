@@ -12,8 +12,8 @@ GET /api/users/:id
 :id -> Variable | Dynamic
 
 
-POST /api/users - Create new user
+POST /api/users - Create new user (Done)
 
-PATCH /api/users/1 - Edit the user with ID 1
+PATCH /api/users/1 - Edit the user with ID 1 (Done)
 
-DELETE /api/users/1 - Delete the user with ID 1
+DELETE /api/users/1 - Delete the user with ID 1 (Done)

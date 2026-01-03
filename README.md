@@ -2,5 +2,6 @@
 
 - Modules in Node.js
 - File handing in Node.js
-- Building HTTP server in Node.js
-- Getting started with Express and Node.js
+- Build HTTP server in Node.js
+- Get started with Express and Node.js
+- Build REST APIs using Node.js and Express
