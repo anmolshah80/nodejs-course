@@ -13,6 +13,19 @@ const PORT = process.env.PORT || 8000;
 // Middleware
 app.use(express.urlencoded({ extended: false }));
 
+// Middleware
+app.use((req, res, next) => {
+  const logData = `\n${Date.now()}: ${req.method} ${req.url} from IP ${req.ip}`;
+
+  fs.appendFile('log.txt', logData, (error) => {
+    if (error) {
+      console.log('Error logging the request info: ', error);
+    }
+
+    next();
+  });
+});
+
 app.get('/', (req, res) => {
   res.send('Welcome to the Home Page!');
 });
@@ -38,6 +51,9 @@ app.get('/users', (req, res) => {
 
 // REST API
 app.get('/api/users', (req, res) => {
+  // set custom header (always prefix `X-` to denote a custom header)
+  res.setHeader('X-Full-Name', 'Anmol Shah');
+
   return res.json(users);
 });
 

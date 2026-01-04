@@ -5,3 +5,11 @@
 - Build HTTP server in Node.js
 - Get started with Express and Node.js
 - Build REST APIs using Node.js and Express
+- Express Middleware
+- What are HTTP Headers in an API
+
+## Notes
+
+- [Using middleware (express)](https://expressjs.com/en/guide/using-middleware.html)
+
+- [The HTTP Request Headers List](https://thevalleyofcode.com/http-request-headers/)
