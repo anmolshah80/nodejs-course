@@ -7,6 +7,7 @@
 - Build REST APIs using Node.js and Express
 - Express Middleware
 - What are HTTP Headers in an API
+- HTTP Status Codes
 
 ## Notes
 

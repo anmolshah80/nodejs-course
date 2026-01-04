@@ -10,6 +10,14 @@ const app = express();
 
 const PORT = process.env.PORT || 8000;
 
+const FORM_DATA_KEYS = [
+  'first_name',
+  'last_name',
+  'email',
+  'gender',
+  'job_title',
+];
+
 // Middleware
 app.use(express.urlencoded({ extended: false }));
 
@@ -66,7 +74,9 @@ app
     const user = users.find((user) => user.id === id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res
+        .status(404)
+        .json({ status: 'failed', message: 'User not found' });
     } else {
       return res.json(user);
     }
@@ -75,10 +85,20 @@ app
     const { id } = req.params;
     const body = req.body;
 
+    if (!body) {
+      return res.status(400).send({
+        status: 'failed',
+        message: 'all fields are missing',
+        missingFields: FORM_DATA_KEYS,
+      });
+    }
+
     const user = users.find((user) => user.id === id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res
+        .status(404)
+        .json({ status: 'failed', message: 'User not found' });
     }
 
     users = users.map((user) => {
@@ -97,6 +117,7 @@ app
         console.log('Patch req error: ', error);
 
         return res.status(500).send({
+          status: 'failed',
           message: `An error occurred while updating the user with ID: ${id}`,
         });
       }
@@ -112,7 +133,9 @@ app
     const user = users.find((user) => user.id === id);
 
     if (!user) {
-      return res.status(404).send({ message: 'User not found' });
+      return res
+        .status(404)
+        .send({ status: 'failed', message: 'User not found' });
     }
 
     users = users.filter((user) => user.id !== id);
@@ -122,6 +145,7 @@ app
         console.log('Delete req error: ', error);
 
         return res.status(500).send({
+          status: 'failed',
           message: `An error occurred while deleting the user with ID: ${id}`,
         });
       }
@@ -134,6 +158,34 @@ app.post('/api/users', (req, res) => {
   const id = uuidv4();
 
   const body = req.body;
+
+  if (!body) {
+    return res.status(400).send({
+      status: 'failed',
+      message: 'all fields are missing',
+      missingFields: FORM_DATA_KEYS,
+    });
+  }
+
+  const bodyProperties = Object.keys(body);
+
+  const isFormDataValid = FORM_DATA_KEYS.every((value) => {
+    if (bodyProperties.includes(value)) return true;
+
+    return false;
+  });
+
+  const missingFields = FORM_DATA_KEYS.filter(
+    (formDataKey) => !bodyProperties.includes(formDataKey),
+  );
+
+  if (!isFormDataValid) {
+    return res.status(400).send({
+      status: 'failed',
+      message: 'some fields are missing',
+      missingFields,
+    });
+  }
 
   const newUser = {
     id,
@@ -157,7 +209,7 @@ app.post('/api/users', (req, res) => {
 
     const createdUser = users.find((user) => user.id === id);
 
-    return res.send(createdUser);
+    return res.status(201).send({ status: 'success', user: createdUser });
   });
 });
 

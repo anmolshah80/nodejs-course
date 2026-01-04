@@ -2,3 +2,14 @@
 1767442851656: GET /api/users/b059bc95-2960-492a-ab7b-4407564c9cb1 from IP ::1
 1767442889579: GET /api/users/98 from IP ::1
 1767506268828: GET /api/users from IP ::1
+1767507695020: POST /api/users from IP ::1
+1767508931463: POST /api/users from IP ::1
+1767508949877: POST /api/users from IP ::1
+1767509076689: POST /api/users from IP ::1
+1767509090015: POST /api/users from IP ::1
+1767509097773: POST /api/users from IP ::1
+1767509203116: POST /api/users from IP ::1
+1767509628642: POST /api/users from IP ::1
+1767509640801: POST /api/users from IP ::1
+1767509657044: POST /api/users from IP ::1
+1767509661025: POST /api/users from IP ::1
