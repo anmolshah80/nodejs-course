@@ -13,3 +13,15 @@
 1767509640801: POST /api/users from IP ::1
 1767509657044: POST /api/users from IP ::1
 1767509661025: POST /api/users from IP ::1
+1767897064574: POST /api/users from IP ::1
+1767897093557: POST /api/users from IP ::1
+1767897269316: GET /api/users from IP ::1
+1767897344566: GET /users from IP ::1
+1767897586630: GET /api/users/98 from IP ::1
+1767897662432: GET /api/users/695ff805f55091f93e0a0ead from IP ::1
+1767898072085: PATCH /api/users/695ff805f55091f93e0a0ead from IP ::1
+1767898324896: DELETE /api/users/695ff805f55091f93e0a0ead from IP ::1
+1767898338758: POST /api/users from IP ::1
+1767898371491: POST /api/users from IP ::1
+1767898394882: POST /api/users from IP ::1
+1767898427066: POST /api/users from IP ::1

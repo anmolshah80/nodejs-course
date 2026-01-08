@@ -1,10 +1,11 @@
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
+const mongoose = require('mongoose');
 
 const MOCK_DATA_FILE_PATH = './data/MOCK_DATA.json';
 
-let users = require(MOCK_DATA_FILE_PATH);
+// let users = require(MOCK_DATA_FILE_PATH);
 
 const app = express();
 
@@ -17,6 +18,41 @@ const FORM_DATA_KEYS = [
   'gender',
   'job_title',
 ];
+
+// Connection
+mongoose
+  .connect('mongodb://127.0.0.1:27017/youtube-app-1')
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.log('Mongo error: ', err));
+
+// Schema
+const userSchema = new mongoose.Schema(
+  {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    gender: {
+      type: String,
+      required: true,
+    },
+    jobTitle: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true },
+);
+
+const User = mongoose.model('user', userSchema);
 
 // Middleware
 app.use(express.urlencoded({ extended: false }));
@@ -38,17 +74,19 @@ app.get('/', (req, res) => {
   res.send('Welcome to the Home Page!');
 });
 
-app.get('/users', (req, res) => {
+app.get('/users', async (req, res) => {
+  const allDbUsers = await User.find({});
+
   const html = `
     <p style="font-weight: bold; margin-bottom: 1.75rem; margin-left: 1rem;">List of users (${
-      users.length
+      allDbUsers.length
     }):</p>
 
     <ul style="display: flex; flex-direction: column; gap: 1rem;">
-      ${users
+      ${allDbUsers
         .map(
           (user) =>
-            `<li>${user.first_name} ${user.last_name} (${user.gender}) - ${user.email}</li>`,
+            `<li>${user.firstName} ${user.lastName} (${user.gender}) - ${user.email}</li>`,
         )
         .join('')}
     </ul>
@@ -58,20 +96,22 @@ app.get('/users', (req, res) => {
 });
 
 // REST API
-app.get('/api/users', (req, res) => {
+app.get('/api/users', async (req, res) => {
+  const allDbUsers = await User.find({});
+
   // set custom header (always prefix `X-` to denote a custom header)
   res.setHeader('X-Full-Name', 'Anmol Shah');
 
-  return res.json(users);
+  return res.json(allDbUsers);
 });
 
 // Route grouping
 app
   .route('/api/users/:id')
-  .get((req, res) => {
+  .get(async (req, res) => {
     const { id } = req.params;
 
-    const user = users.find((user) => user.id === id);
+    const user = await User.findById(id);
 
     if (!user) {
       return res
@@ -81,7 +121,7 @@ app
       return res.json(user);
     }
   })
-  .patch((req, res) => {
+  .patch(async (req, res) => {
     const { id } = req.params;
     const body = req.body;
 
@@ -93,68 +133,80 @@ app
       });
     }
 
-    const user = users.find((user) => user.id === id);
-
-    if (!user) {
-      return res
-        .status(404)
-        .json({ status: 'failed', message: 'User not found' });
-    }
-
-    users = users.map((user) => {
-      if (user.id === id) {
-        return {
-          ...user,
-          ...body,
-        };
-      }
-
-      return user;
+    const result = await User.findByIdAndUpdate(id, {
+      firstName: body.first_name,
+      lastName: body.last_name,
+      email: body.email,
+      gender: body.gender,
+      jobTitle: body.job_title,
     });
 
-    fs.writeFile(MOCK_DATA_FILE_PATH, JSON.stringify(users), (error) => {
-      if (error) {
-        console.log('Patch req error: ', error);
+    // if (!user) {
+    //   return res
+    //     .status(404)
+    //     .json({ status: 'failed', message: 'User not found' });
+    // }
 
-        return res.status(500).send({
-          status: 'failed',
-          message: `An error occurred while updating the user with ID: ${id}`,
-        });
-      }
+    // users = users.map((user) => {
+    //   if (user.id === id) {
+    //     return {
+    //       ...user,
+    //       ...body,
+    //     };
+    //   }
 
-      const updatedUser = users.find((user) => user.id === id);
+    //   return user;
+    // });
 
-      return res.send(updatedUser);
-    });
+    // fs.writeFile(MOCK_DATA_FILE_PATH, JSON.stringify(users), (error) => {
+    //   if (error) {
+    //     console.log('Patch req error: ', error);
+
+    //     return res.status(500).send({
+    //       status: 'failed',
+    //       message: `An error occurred while updating the user with ID: ${id}`,
+    //     });
+    //   }
+
+    //   const updatedUser = users.find((user) => user.id === id);
+
+    //   return res.send(updatedUser);
+    // });
+
+    return res.status(200).send({ status: 'success', user: result });
   })
-  .delete((req, res) => {
+  .delete(async (req, res) => {
     const { id } = req.params;
 
-    const user = users.find((user) => user.id === id);
+    // const user = users.find((user) => user.id === id);
 
-    if (!user) {
-      return res
-        .status(404)
-        .send({ status: 'failed', message: 'User not found' });
-    }
+    // if (!user) {
+    //   return res
+    //     .status(404)
+    //     .send({ status: 'failed', message: 'User not found' });
+    // }
 
-    users = users.filter((user) => user.id !== id);
+    // users = users.filter((user) => user.id !== id);
 
-    fs.writeFile(MOCK_DATA_FILE_PATH, JSON.stringify(users), (error) => {
-      if (error) {
-        console.log('Delete req error: ', error);
+    // fs.writeFile(MOCK_DATA_FILE_PATH, JSON.stringify(users), (error) => {
+    //   if (error) {
+    //     console.log('Delete req error: ', error);
 
-        return res.status(500).send({
-          status: 'failed',
-          message: `An error occurred while deleting the user with ID: ${id}`,
-        });
-      }
+    //     return res.status(500).send({
+    //       status: 'failed',
+    //       message: `An error occurred while deleting the user with ID: ${id}`,
+    //     });
+    //   }
 
-      return res.send(users);
-    });
+    //   return res.send(users);
+    // });
+
+    const result = await User.findByIdAndDelete(id);
+
+    return res.status(200).json({ status: 'success', userId: result._id });
   });
 
-app.post('/api/users', (req, res) => {
+app.post('/api/users', async (req, res) => {
   const id = uuidv4();
 
   const body = req.body;
@@ -187,30 +239,40 @@ app.post('/api/users', (req, res) => {
     });
   }
 
-  const newUser = {
-    id,
-    first_name: body.first_name,
-    last_name: body.last_name,
+  // const newUser = {
+  //   id,
+  //   first_name: body.first_name,
+  //   last_name: body.last_name,
+  //   email: body.email,
+  //   gender: body.gender,
+  //   job_title: body.job_title,
+  // };
+
+  // users.push(newUser);
+
+  // fs.writeFile(MOCK_DATA_FILE_PATH, JSON.stringify(users), (error) => {
+  //   if (error) {
+  //     console.log('Post req error: ', error);
+
+  //     return res
+  //       .status(500)
+  //       .send({ message: 'An error occurred while creating a new user' });
+  //   }
+
+  //   const createdUser = users.find((user) => user.id === id);
+
+  //   return res.status(201).send({ status: 'success', user: createdUser });
+  // });
+
+  const result = await User.create({
+    firstName: body.first_name,
+    lastName: body.last_name,
     email: body.email,
     gender: body.gender,
-    job_title: body.job_title,
-  };
-
-  users.push(newUser);
-
-  fs.writeFile(MOCK_DATA_FILE_PATH, JSON.stringify(users), (error) => {
-    if (error) {
-      console.log('Post req error: ', error);
-
-      return res
-        .status(500)
-        .send({ message: 'An error occurred while creating a new user' });
-    }
-
-    const createdUser = users.find((user) => user.id === id);
-
-    return res.status(201).send({ status: 'success', user: createdUser });
+    jobTitle: body.job_title,
   });
+
+  res.status(201).json({ status: 'success', user: result });
 });
 
 app.listen(PORT, () => {
