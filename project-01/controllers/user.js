@@ -5,10 +5,6 @@ const MOCK_DATA_FILE_PATH = './data/MOCK_DATA.json';
 // let users = require(MOCK_DATA_FILE_PATH);
 
 async function handleGetAllFormattedUsers(req, res, next) {
-  console.log('req.url', req.url);
-  console.log('req.baseUrl', req.baseUrl);
-  console.log('req.originalUrl', req.originalUrl);
-
   // Source -> https://expressjs.com/en/guide/routing.html
   if (req.baseUrl !== '/users') {
     return next();
