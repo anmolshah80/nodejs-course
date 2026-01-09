@@ -25,3 +25,16 @@
 1767898371491: POST /api/users from IP ::1
 1767898394882: POST /api/users from IP ::1
 1767898427066: POST /api/users from IP ::1
+1767952963355: GET /users from IP ::1
+1767952997672: GET /users from IP ::1
+1767953002357: GET /api/users/695ff805f55091f93e0a0ead from IP ::1
+1767953006403: GET /users from IP ::1
+1767953014837: GET /api/users from IP ::1
+1767953826463: GET /api/users from IP ::1
+1767953895130: GET /api/users from IP ::1
+1767953907703: GET /users from IP ::1
+1767954055574: GET /users from IP ::1
+1767954441443: GET /users from IP ::1
+1767954447629: GET /api/users from IP ::1
+1767954608416: GET /api/users from IP ::1
+1767954612891: GET /users from IP ::1
