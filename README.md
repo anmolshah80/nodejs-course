@@ -8,6 +8,10 @@
 - Express Middleware
 - What are HTTP Headers in an API
 - HTTP Status Codes
+- Getting Started with MongoDB
+- Connecting Node.js with MongoDB | Mongoose + Express
+- Model View Controller in Node.js | MVC Pattern
+- Create a custom URL shortener using Node.js and MongoDB
 
 ## Notes
 
