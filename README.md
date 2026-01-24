@@ -12,6 +12,7 @@
 - Connecting Node.js with MongoDB | Mongoose + Express
 - Model View Controller in Node.js | MVC Pattern
 - Create a custom URL shortener using Node.js and MongoDB
+- Server Side Rendering with EJS and Node.js
 
 ## Notes
 
