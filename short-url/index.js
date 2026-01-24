@@ -19,7 +19,7 @@ app.use(express.json());
 
 app.use('/url', urlRoute);
 
-app.get('/:shortId', async (req, res) => {
+app.get('/url/:shortId', async (req, res) => {
   const { shortId } = req.params;
 
   if (!shortId)
@@ -39,6 +39,19 @@ app.get('/:shortId', async (req, res) => {
   );
 
   res.redirect(entry.redirectURL);
+});
+
+app.get('/test', async (req, res) => {
+  const allUrls = await URL.find({});
+
+  return res.end(`
+    <html>
+      <body>
+        <ol>
+          ${allUrls.map((url) => `<li>${url.shortId} - ${url.redirectURL} - ${url.visitHistory.length} visits</li>`).join('')}
+        </ol>
+      </body>
+    </html>`);
 });
 
 app.listen(PORT, () => {
