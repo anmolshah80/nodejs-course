@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 
 const URL = require('./models/url');
 
@@ -13,6 +14,10 @@ const PORT = process.env.PORT || 8001;
 connectToMongoDB('mongodb://127.0.0.1:27017/short-url')
   .then(() => console.log('MongoDb connected!'))
   .catch((err) => console.log('MongoDb connection error: ', err));
+
+app.set('view engine', 'ejs');
+
+app.set('views', path.resolve('./views'));
 
 // app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -44,14 +49,9 @@ app.get('/url/:shortId', async (req, res) => {
 app.get('/test', async (req, res) => {
   const allUrls = await URL.find({});
 
-  return res.end(`
-    <html>
-      <body>
-        <ol>
-          ${allUrls.map((url) => `<li>${url.shortId} - ${url.redirectURL} - ${url.visitHistory.length} visits</li>`).join('')}
-        </ol>
-      </body>
-    </html>`);
+  return res.render('home', {
+    urls: allUrls,
+  });
 });
 
 app.listen(PORT, () => {
