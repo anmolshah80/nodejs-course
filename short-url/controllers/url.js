@@ -21,7 +21,11 @@ async function handleGenerateNewShortURL(req, res, next) {
     visitHistory: [],
   });
 
-  return res.status(201).json({ status: 'success', shortId: shortID });
+  // return res.status(201).json({ status: 'success', shortId: shortID });
+
+  return res.status(201).render('home', {
+    shortID,
+  });
 }
 
 async function handleGetAnalytics(req, res, next) {
