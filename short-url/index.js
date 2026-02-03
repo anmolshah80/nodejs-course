@@ -6,6 +6,7 @@ const URL = require('./models/url');
 const { connectToMongoDB } = require('./connect');
 
 const urlRoute = require('./routes/url');
+const staticRoute = require('./routes/staticRouter');
 
 const app = express();
 
@@ -19,8 +20,12 @@ app.set('view engine', 'ejs');
 
 app.set('views', path.resolve('./views'));
 
-// app.use(express.urlencoded({ extended: false }));
+// to parse form data
+app.use(express.urlencoded({ extended: false }));
+// to parse json data
 app.use(express.json());
+
+app.use('/', staticRoute);
 
 app.use('/url', urlRoute);
 
@@ -44,14 +49,6 @@ app.get('/url/:shortId', async (req, res) => {
   );
 
   res.redirect(entry.redirectURL);
-});
-
-app.get('/test', async (req, res) => {
-  const allUrls = await URL.find({});
-
-  return res.render('home', {
-    urls: allUrls,
-  });
 });
 
 app.listen(PORT, () => {

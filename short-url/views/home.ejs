@@ -1,15 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Short URL</title>
-  </head>
-  <body>
-    <ol>
-      <% allUrls.forEach(url => {
-        <li><%= url.shortId %> - <%= url.redirectURL %> - <%= url.visitHistory.length %> visits</li>
-      }) %>
-    </ol>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Short URL</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>URL Shortener</h1>
+  <% if (locals.shortID) { %>
+  <p>
+    URL Generated: <a href="http://localhost:8001/url/<%= locals.shortID %>" target="_blank">http://localhost:8001/url/<%= locals.shortID %>
+    </a>
+  </p>
+  <% } %>
+  <section>
+    <form method="POST" action="/url">
+      <label for="url">Enter Your Original URL</label>
+      <input type="text" placeholder="https://example.com" name="url" />
+
+      <button type="submit">Generate</button>
+    </form>
+  </section>
+
+  <section>
+    <% if (locals.urls && locals.urls.length > 0) { %>
+    <table>
+      <thead>
+        <tr>
+          <th>S.N.</th>
+          <th>Short ID</th>
+          <th>Redirect URL</th>
+          <th>Clicks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% locals.urls.forEach((url, index) => { %>
+        <tr>
+          <td><%= index + 1 %></td>
+          <td><a href="http://localhost:8001/url/<%= url.shortId %>" target="_blank"><%= url.shortId %></a></td>
+          <td><a href="<%= url.redirectURL %>" target="_blank"><%= url.redirectURL %></a></td>
+          <td><%= url.visitHistory.length %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% } else { %>
+    <p>No URLs generated yet.</p>
+    <% } %>
+  </section>
+</body>
+
 </html>
