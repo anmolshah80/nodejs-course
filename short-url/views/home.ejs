@@ -13,7 +13,7 @@
   </style>
 </head>
 
-<body>
+<body style="display: flex; flex-direction: column; gap: 0.5rem;">
   <h1>URL Shortener</h1>
   <% if (locals.shortID) { %>
   <p>
@@ -30,7 +30,7 @@
     </form>
   </section>
 
-  <section>
+  <section style="margin-top: 2rem;">
     <% if (locals.urls && locals.urls.length > 0) { %>
     <table>
       <thead>
