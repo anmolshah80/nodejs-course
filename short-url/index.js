@@ -7,6 +7,7 @@ const { connectToMongoDB } = require('./connect');
 
 const urlRoute = require('./routes/url');
 const staticRoute = require('./routes/staticRouter');
+const userRoute = require('./routes/user');
 
 const app = express();
 
@@ -26,8 +27,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use('/', staticRoute);
-
 app.use('/url', urlRoute);
+app.use('/user', userRoute);
 
 app.get('/url/:shortId', async (req, res) => {
   const { shortId } = req.params;
