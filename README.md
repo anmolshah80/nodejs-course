@@ -21,3 +21,7 @@
 - [Using middleware (express)](https://expressjs.com/en/guide/using-middleware.html)
 
 - [The HTTP Request Headers List](https://thevalleyofcode.com/http-request-headers/)
+
+## To-dos
+
+- Research for ways to implement `zod` with `ejs`

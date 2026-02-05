@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up</title>
+    <title>Sign in</title>
 
     <style>
       *,
@@ -19,9 +19,8 @@
       }
 
       .error-message {
-        color: oklch(63.7% 0.237 25.331);
-        font-size: 1rem;
-        font-weight: bold;
+        color: oklch(63.7% 0.237 25.331); font-size: 1rem; 
+        font-weight: bold; 
         margin-top: -0.25rem;
       }
     </style>
@@ -40,11 +39,11 @@
       "
     >
       <h1 style="font-size: 2.75rem; text-align: center; margin-bottom: 0.5rem">
-        Sign Up
+        Sign In
       </h1>
 
       <form
-        action="/user"
+        action="/user/login"
         method="POST"
         style="
           display: flex;
@@ -54,30 +53,6 @@
           justify-content: center;
         "
       >
-        <div
-          style="
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            min-width: 350px;
-          "
-        >
-          <label for="name" style="font-size: 1.15rem">Full Name</label>
-          <input
-            type="text"
-            placeholder="John Doe"
-            name="name"
-            id="name"
-            autocomplete="name"
-            style="
-              padding-inline: 0.75rem;
-              padding-block: 0.5rem;
-              border-radius: 5px;
-              border: 2px solid lightgray;
-            "
-          />
-        </div>
-
         <div
           style="
             display: flex;
@@ -100,6 +75,9 @@
               border: 2px solid lightgray;
             "
           />
+          <% if (locals.error) { %>
+           <p class="error-message"><%= locals.error %></p>
+          <% } %>
         </div>
 
         <div
@@ -125,31 +103,6 @@
           />
         </div>
 
-        <div
-          style="
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            min-width: 350px;
-          "
-        >
-          <label for="confirmPassword" style="font-size: 1.15rem"
-            >Confirm Password</label
-          >
-          <input
-            type="password"
-            placeholder="Re-enter your password"
-            name="confirmPassword"
-            id="confirmPassword"
-            style="
-              padding-inline: 0.75rem;
-              padding-block: 0.5rem;
-              border-radius: 5px;
-              border: 2px solid lightgray;
-            "
-          />
-        </div>
-
         <button
           type="submit"
           style="
@@ -165,7 +118,7 @@
             margin-top: 1rem;
           "
         >
-          Register
+          Login
         </button>
       </form>
     </section>
