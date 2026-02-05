@@ -23,10 +23,46 @@
   <% } %>
   <section>
     <form method="POST" action="/url">
-      <label for="url">Enter Your Original URL</label>
-      <input type="text" placeholder="https://example.com" name="url" />
+      <div 
+        style="
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          min-width: 350px;
+        "
+      >
+        <label for="url" style="font-size: 1.15rem">Enter Your Original URL</label>
+        <input 
+          type="text" 
+          placeholder="https://example.com" 
+          name="url" 
+          id="url" 
+          style="
+            padding-inline: 0.75rem;
+            padding-block: 0.5rem;
+            border-radius: 5px;
+            border: 2px solid lightgray;
+          "
+        />
+      </div>
 
-      <button type="submit">Generate</button>
+      <button 
+        type="submit" 
+        style="
+          padding-inline: 1rem;
+          padding-block: 0.75rem;
+          border: none;
+          border-radius: 10px;
+          background-color: #000000;
+          color: #ffffff;
+          cursor: pointer;
+          font-size: 1.25rem;
+          font-weight: bold;
+          margin-top: 1rem;
+        "
+      >
+        Generate
+      </button>
     </form>
   </section>
 
