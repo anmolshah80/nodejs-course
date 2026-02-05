@@ -10,6 +10,13 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+
+    .error-message {
+      color: oklch(63.7% 0.237 25.331); 
+      font-size: 1rem; 
+      font-weight: bold; 
+      margin-top: -0.25rem;
+    }
   </style>
 </head>
 
@@ -21,8 +28,8 @@
     </a>
   </p>
   <% } %>
-  <section>
-    <form method="POST" action="/url">
+  <section style="width: 400px;">
+    <form method="POST" action="/url" style="display: flex; flex-direction: column; width: 100%;">
       <div 
         style="
           display: flex;
@@ -38,19 +45,25 @@
           name="url" 
           id="url" 
           style="
-            padding-inline: 0.75rem;
-            padding-block: 0.5rem;
+            padding-inline: 1rem;
+            padding-block: 0.75rem;
             border-radius: 5px;
             border: 2px solid lightgray;
           "
         />
+
+        <% if (locals.error) { %>
+          <p class="error-message"><%= locals.error %></p>
+        <% } else if (locals.zodErrors && locals.zodErrors.length > 0) { %>
+          <p class="error-message"><%= locals.zodErrors[0]['message'] %></p>
+        <% } %>
       </div>
 
       <button 
         type="submit" 
         style="
-          padding-inline: 1rem;
-          padding-block: 0.75rem;
+          padding-inline: 0.9rem;
+          padding-block: 0.65rem;
           border: none;
           border-radius: 10px;
           background-color: #000000;
@@ -66,7 +79,7 @@
     </form>
   </section>
 
-  <section style="margin-top: 2rem;">
+  <section style="margin-top: 2rem; overflow: auto;">
     <% if (locals.urls && locals.urls.length > 0) { %>
     <table>
       <thead>
