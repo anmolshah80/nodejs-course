@@ -1,110 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Short URL</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Short URL</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: center;
+        min-height: 100dvh;
+        margin: 1.5rem 0 3.5rem;
+        padding: 0;
+      }
 
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+      .error-message {
+        color: oklch(63.7% 0.237 25.331);
+        font-size: 1rem;
+        font-weight: bold;
+      }
 
-    .error-message {
-      color: oklch(63.7% 0.237 25.331); 
-      font-size: 1rem; 
-      font-weight: bold; 
-      margin-top: -0.25rem;
-    }
-  </style>
-</head>
+      .-mt-1 {
+        margin-top: -0.25rem;
+      }
 
-<body style="display: flex; flex-direction: column; gap: 0.5rem;">
-  <h1>URL Shortener</h1>
-  <% if (locals.shortID) { %>
-  <p>
-    URL Generated: <a href="http://localhost:8001/url/<%= locals.shortID %>" target="_blank">http://localhost:8001/url/<%= locals.shortID %>
-    </a>
-  </p>
-  <% } %>
-  <section style="width: 400px;">
-    <form method="POST" action="/url" style="display: flex; flex-direction: column; width: 100%;">
-      <div 
-        style="
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-          min-width: 350px;
-        "
+      p {
+        margin: 0;
+        padding: 0;
+      }
+
+      .truncate {
+        display: inline-block;
+        width: calc(100dvw - 30rem);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .url-generated {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 2rem;
+      }
+
+      .main-header {
+        font-size: 2.75rem;
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .main-header:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1 class="main-header">
+      <a href="/" style="text-decoration: none; color: inherit"
+        >URL Shortener</a
       >
-        <label for="url" style="font-size: 1.15rem">Enter Your Original URL</label>
-        <input 
-          type="text" 
-          placeholder="https://example.com" 
-          name="url" 
-          id="url" 
+    </h1>
+
+    <section style="width: 400px; margin-bottom: 2rem">
+      <form
+        method="POST"
+        action="/url"
+        style="display: flex; flex-direction: column; width: 100%"
+      >
+        <div
           style="
-            padding-inline: 1rem;
-            padding-block: 0.75rem;
-            border-radius: 5px;
-            border: 2px solid lightgray;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-width: 350px;
           "
-        />
+        >
+          <label for="url" style="font-size: 1.15rem"
+            >Enter Your Original URL</label
+          >
+          <input
+            type="text"
+            placeholder="https://example.com"
+            name="url"
+            id="url"
+            style="
+              padding-inline: 1rem;
+              padding-block: 0.75rem;
+              border-radius: 5px;
+              border: 2px solid lightgray;
+            "
+          />
 
-        <% if (locals.error) { %>
-          <p class="error-message"><%= locals.error %></p>
-        <% } else if (locals.zodErrors && locals.zodErrors.length > 0) { %>
-          <p class="error-message"><%= locals.zodErrors[0]['message'] %></p>
-        <% } %>
-      </div>
+          <% if (locals.error) { %>
+          <p class="error-message -mt-1"><%= locals.error %></p>
+          <% } else if (locals.zodErrors && locals.zodErrors.length > 0) { %>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem">
+            <% locals.zodErrors.forEach((zodError) => { %>
+            <p class="error-message"><%= zodError.message %></p>
+            <% }) %>
+          </div>
+          <% } %>
+        </div>
 
-      <button 
-        type="submit" 
-        style="
-          padding-inline: 0.9rem;
-          padding-block: 0.65rem;
-          border: none;
-          border-radius: 10px;
-          background-color: #000000;
-          color: #ffffff;
-          cursor: pointer;
-          font-size: 1.25rem;
-          font-weight: bold;
-          margin-top: 1rem;
-        "
-      >
-        Generate
-      </button>
-    </form>
-  </section>
+        <button
+          type="submit"
+          style="
+            padding-inline: 0.9rem;
+            padding-block: 0.65rem;
+            border: none;
+            border-radius: 10px;
+            background-color: #000000;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-top: 1rem;
+          "
+        >
+          Generate
+        </button>
+      </form>
+    </section>
 
-  <section style="margin-top: 2rem; overflow: auto;">
-    <% if (locals.urls && locals.urls.length > 0) { %>
-    <table>
-      <thead>
-        <tr>
-          <th>S.N.</th>
-          <th>Short ID</th>
-          <th>Redirect URL</th>
-          <th>Clicks</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% locals.urls.forEach((url, index) => { %>
-        <tr>
-          <td><%= index + 1 %></td>
-          <td><a href="http://localhost:8001/url/<%= url.shortId %>" target="_blank"><%= url.shortId %></a></td>
-          <td><a href="<%= url.redirectURL %>" target="_blank"><%= url.redirectURL %></a></td>
-          <td><%= url.visitHistory.length %></td>
-        </tr>
-        <% }); %>
-      </tbody>
-    </table>
-    <% } else { %>
-    <p>No URLs generated yet.</p>
+    <% if (locals.shortID) { %>
+    <p class="url-generated">
+      URL Generated:
+      <a href="http://localhost:8001/url/<%= locals.shortID %>" target="_blank">
+        http://localhost:8001/url/<%= locals.shortID %>
+      </a>
+    </p>
     <% } %>
-  </section>
-</body>
 
+    <section
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      "
+    >
+      <h2 style="font-size: 2.25rem; margin-block: 1rem 2rem">
+        Generated URLs
+      </h2>
+
+      <% if (locals.urls && locals.urls.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>S.N.</th>
+            <th>Short ID</th>
+            <th>Redirect URL</th>
+            <th>Clicks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% locals.urls.forEach((url, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td>
+              <a
+                href="http://localhost:8001/url/<%= url.shortId %>"
+                target="_blank"
+              >
+                <%= url.shortId %>
+              </a>
+            </td>
+            <td>
+              <a href="<%= url.redirectURL %>" target="_blank" class="truncate">
+                <%= url.redirectURL %>
+              </a>
+            </td>
+            <td><%= url.visitHistory.length %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% } else { %>
+      <p>No URLs generated yet.</p>
+      <% } %>
+    </section>
+  </body>
 </html>

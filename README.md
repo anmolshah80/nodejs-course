@@ -22,6 +22,40 @@
 
 - [The HTTP Request Headers List](https://thevalleyofcode.com/http-request-headers/)
 
+### Error
+
+- Error formatting document
+- Unexpected character "EOF" (Do you have an unescaped "{" in your template? Use "{{ '{' }}") to escape it.)
+
+### Fix
+
+- Tell Prettier to treat `.ejs` as HTML (recommended)
+- Create a `.prettierrc` in your project root:
+
+```json
+{
+  "overrides": [
+    {
+      "files": "*.ejs",
+      "options": {
+        "parser": "html"
+      }
+    }
+  ]
+}
+```
+
+- Then reload VS Code and format again.
+
+### Quick Sanity Checklist
+
+- After adding `.prettierrc`:
+  - Reload VS Code
+  - Open home.ejs
+  - Run Format Document
+  - Parser should now be `html`, not `angular`
+- [GitHub Gist](https://gist.github.com/anmolshah80/cabacdc81ac6f315887da10efcea7834)
+
 ## To-dos
 
 - Research for ways to implement `zod` with `ejs`
