@@ -4,7 +4,7 @@ const z = require("zod");
 const passwordSchema = z
   .string()
   .min(8, { error: "Password should at least be 8 characters long" })
-  .max(16, { error: "Password cannot be more than 16 characters" })
+  .max(24, { error: "Password cannot be more than 24 characters" })
   .refine((password) => /[A-Z]/.test(password), {
     error: "Password should have at least one uppercase character",
   })
