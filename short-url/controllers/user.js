@@ -3,15 +3,13 @@ const z = require("zod");
 
 const User = require("../models/user");
 const { setUser } = require("../services/auth");
-const { UserSchema } = require("../lib/schema");
+const { RegisterFormSchema, LoginFormSchema } = require("../lib/schema");
 
 async function handleUserSignup(req, res, next) {
   const { fullName, email, password, confirmPassword } = req.body;
 
   try {
-    console.log("req.body: ", req.body);
-
-    UserSchema.parse({ fullName, email, password, confirmPassword });
+    RegisterFormSchema.parse({ fullName, email, password, confirmPassword });
 
     // before creating the user, encrypt the password using bcrypt library
 
@@ -38,21 +36,42 @@ async function handleUserSignup(req, res, next) {
 async function handleUserLogin(req, res, next) {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email, password });
+  try {
+    LoginFormSchema.parse({ email, password });
 
-  if (!user) {
-    return res.render("login", {
-      error: "Invalid email or password",
-    });
+    const user = await User.findOne({ email, password });
+
+    // send a custom error in the same format as zod
+    if (!user) {
+      return res.render("login", {
+        zodErrors: [
+          {
+            code: "custom",
+            path: ["email"],
+            message: "Invalid email or password",
+          },
+        ],
+      });
+    }
+
+    const sessionId = uuidv4();
+
+    setUser(sessionId, user);
+
+    res.cookie("short-url-uid", sessionId);
+
+    return res.redirect("/");
+  } catch (error) {
+    console.log("error: ", error);
+
+    if (error instanceof z.ZodError) {
+      return res.status(400).render("login", {
+        zodErrors: JSON.parse(error),
+      });
+    }
+
+    return res.status(500).send("Internal Server Error");
   }
-
-  const sessionId = uuidv4();
-
-  setUser(sessionId, user);
-
-  res.cookie("short-url-uid", sessionId);
-
-  return res.redirect("/");
 }
 
 module.exports = {

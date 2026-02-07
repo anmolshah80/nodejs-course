@@ -26,7 +26,7 @@ const UrlSchema = z.object({
     }),
 });
 
-const UserSchema = z
+const RegisterFormSchema = z
   .object({
     fullName: z
       .string({ error: "Full name is required" })
@@ -45,7 +45,13 @@ const UserSchema = z
     path: ["confirmPassword"],
   });
 
+const LoginFormSchema = z.object({
+  email: z.email({ error: "Please enter a valid email address" }),
+  password: passwordSchema,
+});
+
 module.exports = {
   UrlSchema,
-  UserSchema,
+  RegisterFormSchema,
+  LoginFormSchema,
 };

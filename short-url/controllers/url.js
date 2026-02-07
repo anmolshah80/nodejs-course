@@ -11,8 +11,15 @@ async function handleGenerateNewShortURL(req, res, next) {
   const urls = await URL.find({});
 
   if (!body.url) {
+    // send a custom error in the same format as zod
     return res.status(400).render("home", {
-      error: "URL field cannot be empty",
+      zodErrors: [
+        {
+          code: "custom",
+          path: ["url"],
+          message: "URL field cannot be empty",
+        },
+      ],
       urls,
     });
   }
