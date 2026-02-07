@@ -1,42 +1,49 @@
 const z = require("zod");
 
+// Source -> https://github.com/colinhacks/zod/discussions/3412#discussioncomment-9916377
 const passwordSchema = z
-  .object({
-    password: z.string().min(8),
-    confirmPassword: z.string(),
-    anotherField: z.string(),
+  .string()
+  .min(8, { error: "Password should at least be 8 characters long" })
+  .max(16, { error: "Password cannot be more than 16 characters" })
+  .refine((password) => /[A-Z]/.test(password), {
+    error: "Password should have at least one uppercase character",
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-
-    // run if password & confirmPassword are valid
-    when(payload) {
-      return schema
-        .pick({ password: true, confirmPassword: true })
-        .safeParse(payload.value).success;
-    },
+  .refine((password) => /[a-z]/.test(password), {
+    error: "Password should have at least one lowercase character",
+  })
+  .refine((password) => /[0-9]/.test(password), {
+    error: "Password should have at least one number",
+  })
+  .refine((password) => /[!@#$%^&*]/.test(password), {
+    error: "Password should have at least one special character (!@#$%^&*)",
   });
-
-// schema.parse({
-//   password: "asdf",
-//   confirmPassword: "asdf",
-//   anotherField: 1234 // ❌ this error will not prevent the password check from running
-// });
 
 const UrlSchema = z.object({
   url: z
     .url()
     .refine((val) => val.startsWith("http://") || val.startsWith("https://"), {
-      message: "URL must start with http:// or https://",
+      error: "URL must start with http:// or https://",
     }),
 });
 
-const UserSchema = z.object({
-  name: z.string(),
-  email: z.email(),
-  passwordSchema,
-});
+const UserSchema = z
+  .object({
+    fullName: z
+      .string({ error: "Full name is required" })
+      .min(1, { error: "Please enter your full name" })
+      .max(70, {
+        error: "Name cannot be more than 70 characters",
+      }),
+    email: z.email({ error: "Please enter a valid email address" }),
+    password: passwordSchema,
+    confirmPassword: z
+      .string({ error: "Confirm password is required" })
+      .min(1, { error: "Confirm password cannot be empty" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    error: "Password and confirm password do not match",
+    path: ["confirmPassword"],
+  });
 
 module.exports = {
   UrlSchema,
