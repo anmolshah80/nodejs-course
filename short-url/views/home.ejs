@@ -96,10 +96,11 @@
             "
           />
 
-          <% if (locals.error) { %>
-          <p class="error-message -mt-1"><%= locals.error %></p>
-          <% } else if (locals.zodErrors && locals.zodErrors.length > 0) { %>
-          <div style="display: flex; flex-direction: column; gap: 0.5rem">
+          <% if (locals.zodErrors && locals.zodErrors.length > 0) { %>
+          <div
+            style="display: flex; flex-direction: column; gap: 0.5rem"
+            class="-mt-1"
+          >
             <% locals.zodErrors.forEach((zodError) => { %>
             <p class="error-message"><%= zodError.message %></p>
             <% }) %>
