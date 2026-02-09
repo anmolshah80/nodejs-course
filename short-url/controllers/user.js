@@ -1,4 +1,3 @@
-const { v4: uuidv4 } = require("uuid");
 const z = require("zod");
 const bcrypt = require("bcrypt");
 
@@ -57,9 +56,9 @@ async function handleUserLogin(req, res, next) {
       });
     }
 
-    const isValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if (!isValid) {
+    if (!isPasswordValid) {
       return res.render("login", {
         zodErrors: [
           {
@@ -71,11 +70,9 @@ async function handleUserLogin(req, res, next) {
       });
     }
 
-    const sessionId = uuidv4();
+    const token = setUser(user);
 
-    setUser(sessionId, user);
-
-    res.cookie("short-url-uid", sessionId);
+    res.cookie("short-url-jwt", token);
 
     return res.redirect("/");
   } catch (error) {

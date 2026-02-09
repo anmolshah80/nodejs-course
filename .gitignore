@@ -1,1 +1,5 @@
 node_modules
+
+# don't track environment variables' files
+.env
+!.env.sample
