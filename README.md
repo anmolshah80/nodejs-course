@@ -23,6 +23,10 @@
 
 - [The HTTP Request Headers List](https://thevalleyofcode.com/http-request-headers/)
 
+- [How to read environment variables from Node.js](https://nodejs.org/en/learn/command-line/how-to-read-environment-variables-from-nodejs)
+
+- [Load environment variables from the `.env` file into `process.env`](https://www.npmjs.com/package/dotenv)
+
 ### Error
 
 - Error formatting document
