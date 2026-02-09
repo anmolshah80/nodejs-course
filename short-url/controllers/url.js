@@ -8,7 +8,9 @@ const { SHORT_ID_MAX_LENGTH } = require("../lib/constants");
 async function handleGenerateNewShortURL(req, res, next) {
   const body = req.body;
 
-  const urls = await URL.find({});
+  if (!req.user) return res.redirect("/login");
+
+  const urls = await URL.find({ createdBy: req.user._id });
 
   if (!body.url) {
     // send a custom error in the same format as zod
@@ -33,6 +35,7 @@ async function handleGenerateNewShortURL(req, res, next) {
       shortId: shortID,
       redirectURL: body.url,
       visitHistory: [],
+      createdBy: req.user._id,
     });
 
     // return res.status(201).json({ status: 'success', shortId: shortID });
