@@ -22,7 +22,7 @@ async function handleUserSignup(req, res, next) {
       password: hashedPassword,
     });
 
-    return res.status(201).redirect("/");
+    return res.status(201).redirect("/login");
   } catch (error) {
     console.log("error: ", error);
 

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const urlSchema = new mongoose.Schema(
   {
@@ -18,10 +18,15 @@ const urlSchema = new mongoose.Schema(
         },
       },
     ],
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      required: true,
+    },
   },
   { timestamps: true },
 );
 
-const URL = mongoose.model('url', urlSchema);
+const URL = mongoose.model("url", urlSchema);
 
 module.exports = URL;

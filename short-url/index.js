@@ -1,42 +1,46 @@
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
 
-const URL = require('./models/url');
+const { restrictToLoggedInUserOnly, checkAuth } = require("./middlewares/auth");
 
-const { connectToMongoDB } = require('./connect');
+const URL = require("./models/url");
 
-const urlRoute = require('./routes/url');
-const staticRoute = require('./routes/staticRouter');
-const userRoute = require('./routes/user');
+const { connectToMongoDB } = require("./connect");
+
+const urlRoute = require("./routes/url");
+const staticRoute = require("./routes/staticRouter");
+const userRoute = require("./routes/user");
 
 const app = express();
 
 const PORT = process.env.PORT || 8001;
 
-connectToMongoDB('mongodb://127.0.0.1:27017/short-url')
-  .then(() => console.log('MongoDb connected!'))
-  .catch((err) => console.log('MongoDb connection error: ', err));
+connectToMongoDB("mongodb://127.0.0.1:27017/short-url")
+  .then(() => console.log("MongoDb connected!"))
+  .catch((err) => console.log("MongoDb connection error: ", err));
 
-app.set('view engine', 'ejs');
+app.set("view engine", "ejs");
 
-app.set('views', path.resolve('./views'));
+app.set("views", path.resolve("./views"));
 
 // to parse form data
 app.use(express.urlencoded({ extended: false }));
 // to parse json data
 app.use(express.json());
+app.use(cookieParser());
 
-app.use('/', staticRoute);
-app.use('/url', urlRoute);
-app.use('/user', userRoute);
+app.use("/", checkAuth, staticRoute);
+app.use("/url", restrictToLoggedInUserOnly, urlRoute);
+app.use("/user", userRoute);
 
-app.get('/url/:shortId', async (req, res) => {
+app.get("/url/:shortId", async (req, res) => {
   const { shortId } = req.params;
 
   if (!shortId)
     return res
       .status(400)
-      .json({ error: 'a valid shortId needs to be provided' });
+      .json({ error: "a valid shortId needs to be provided" });
 
   const entry = await URL.findOneAndUpdate(
     { shortId },
