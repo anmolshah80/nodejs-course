@@ -45,7 +45,7 @@ async function handleUserLogin(req, res, next) {
 
     // send a custom error in the same format as zod
     if (!user) {
-      return res.render("login", {
+      return res.status(401).render("login", {
         zodErrors: [
           {
             code: "custom",
@@ -59,7 +59,7 @@ async function handleUserLogin(req, res, next) {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.render("login", {
+      return res.status(401).render("login", {
         zodErrors: [
           {
             code: "custom",

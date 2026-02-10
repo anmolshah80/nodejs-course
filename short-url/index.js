@@ -3,7 +3,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
-const { restrictToLoggedInUserOnly, checkAuth } = require("./middlewares/auth");
+const { checkForAuthentication, restrictTo } = require("./middlewares/auth");
 
 const URL = require("./models/url");
 
@@ -30,9 +30,12 @@ app.use(express.urlencoded({ extended: false }));
 // to parse json data
 app.use(express.json());
 app.use(cookieParser());
+app.use(checkForAuthentication);
+// Source - https://stackoverflow.com/a/32303676
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", checkAuth, staticRoute);
-app.use("/url", restrictToLoggedInUserOnly, urlRoute);
+app.use("/", staticRoute);
+app.use("/url", restrictTo(["USER", "ADMIN"]), urlRoute);
 app.use("/user", userRoute);
 
 app.get("/url/:shortId", async (req, res) => {
