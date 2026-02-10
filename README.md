@@ -14,6 +14,8 @@
 - Create a custom URL shortener using Node.js and MongoDB
 - Server Side Rendering with EJS and Node.js
 - Building Node.js Authentication from Scratch
+- Cookies and Authorization header in Node.js
+- Authorization in Node.js
 
 ## Notes
 
