@@ -29,6 +29,8 @@
 
 - [Load environment variables from the `.env` file into `process.env`](https://www.npmjs.com/package/dotenv)
 
+- [Load static assets in Node.js](https://stackoverflow.com/questions/32303460/loading-static-assets-in-nodejs/32303676#32303676)
+
 ### Error
 
 - Error formatting document
