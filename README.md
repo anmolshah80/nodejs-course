@@ -16,6 +16,7 @@
 - Building Node.js Authentication from Scratch
 - Cookies and Authorization header in Node.js
 - Authorization in Node.js
+- Create discord bot in Node.js
 
 ## Notes
 
