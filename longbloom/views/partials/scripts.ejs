@@ -3,3 +3,21 @@
   integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
   crossorigin="anonymous"
 ></script>
+
+<script>
+  /** 
+    // Source -> https://stackoverflow.com/questions/11514166/check-file-size-before-upload
+    
+    const signupForm = document.getElementById("signupForm");
+
+    signupForm.addEventListener("submit", (event) => {
+      const file = document.getElementById("profileImage").files[0];
+
+      // 5 MB -> 5242880 bytes
+      if (file && file.size < 5242880) {
+      } else {
+        event.preventDefault();
+      }
+    }); 
+  **/
+</script>
