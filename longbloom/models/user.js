@@ -33,24 +33,27 @@ const userSchema = new Schema(
   { timestamps: true },
 );
 
-userSchema.pre("save", function (next) {
-  const user = this;
+// now the password hashing is being done using bcrypt library
+// since the following implementation interferes with zod validation
+// for `password` and `confirmPassword` fields' values check
+// userSchema.pre("save", function (next) {
+//   const user = this;
 
-  // early return if the user is not trying to modify the password
-  if (!user.isModified("password")) return;
+//   // early return if the user is not trying to modify the password
+//   if (!user.isModified("password")) return;
 
-  const salt = randomBytes(16).toString();
+//   const salt = randomBytes(16).toString();
 
-  // Source -> https://nodejs.org/api/crypto.html#crypto
-  const hashedPassword = createHmac("sha256", salt)
-    .update(user.password)
-    .digest("hex");
+//   // Source -> https://nodejs.org/api/crypto.html#crypto
+//   const hashedPassword = createHmac("sha256", salt)
+//     .update(user.password)
+//     .digest("hex");
 
-  this.salt = salt;
-  this.password = hashedPassword;
+//   this.salt = salt;
+//   this.password = hashedPassword;
 
-  next();
-});
+//   next();
+// });
 
 const User = model("user", userSchema);
 
