@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>500 Internal Server Error</title>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: center;
+        margin: 1.5rem 0 3.5rem;
+        min-height: calc(100dvh - 5rem);
+        padding: 0;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+
+      .main-header {
+        font-size: 12rem;
+        text-align: center;
+        margin: 0;
+      }
+
+      .go-back-home {
+        font-size: 1.75rem;
+        text-decoration: none;
+        color: hsl(0, 0%, 0%);
+        position: relative;
+      }
+
+      .go-back-home:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1 class="main-header">500</h1>
+
+    <div
+      style="
+        margin-inline: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 2rem;
+      "
+    >
+      <p style="font-size: 4rem; font-weight: bold">Internal Server Error</p>
+
+      <p style="font-size: 1.5rem">
+        The server encountered an error and could not complete your request.
+      </p>
+
+      <a href="/" class="go-back-home">
+        <img
+          src="/arrow-top-left.svg"
+          alt="Arrow pointing to the top left"
+          style="
+            position: absolute;
+            left: -1.8rem;
+            width: 1.5rem;
+            height: 1.5rem;
+          "
+        />
+
+        <span>Go back home</span>
+      </a>
+    </div>
+  </body>
+</html>

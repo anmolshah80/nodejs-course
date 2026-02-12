@@ -67,7 +67,7 @@ router.post("/signin", async (req, res) => {
       });
     }
 
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).render("internal-server-error");
   }
 });
 
@@ -93,7 +93,7 @@ router.post("/signup", async (req, res) => {
       });
     }
 
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).render("internal-server-error");
   }
 });
 
