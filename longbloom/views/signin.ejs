@@ -2,14 +2,14 @@
 <html lang="en">
   <head>
     <%- include('./partials/head') %>
-    <title>Sign Up | LongBloom</title>
+    <title>Sign In | LongBloom</title>
 
     <style>
-      .sign-in-link {
+      .sign-up-link {
         text-decoration: none;
       }
 
-      .sign-in-link:hover {
+      .sign-up-link:hover {
         text-decoration: underline;
       }
 
@@ -52,6 +52,7 @@
         gap: 1.25rem;
         flex-direction: column;
         padding: 1.5rem 1rem;
+        min-height: calc(100dvh - 3.5rem);
       "
     >
       <div
@@ -71,17 +72,17 @@
             margin-bottom: 0;
           "
         >
-          Sign Up
+          Sign In
         </h1>
 
         <p style="margin: 0; font-size: 1.5rem; text-align: center">
-          Already have an account?
-          <a href="/user/signin" class="sign-in-link">Log in</a>
+          Don't have an account?
+          <a href="/user/signup" class="sign-up-link">Create an account</a>
         </p>
       </div>
 
       <form
-        action="/user/signup"
+        action="/user/signin"
         method="post"
         class="row g-3"
         style="
@@ -94,27 +95,6 @@
         "
         id="signupForm"
       >
-        <div class="col-md-12">
-          <label class="form-label" for="fullName">Full Name</label>
-          <input
-            type="text"
-            name="fullName"
-            id="fullName"
-            class="form-control"
-            autocomplete="name"
-            placeholder="John Doe"
-          />
-
-          <% if (locals.zodErrors && locals.zodErrors.length > 0) { %>
-          <div style="display: flex; flex-direction: column; gap: 0.5rem">
-            <% locals.zodErrors.forEach((zodError) => { %> <% if
-            (zodError.path[0] === 'fullName') { %>
-            <p class="error-message"><%= zodError.message %></p>
-            <% } %> <% }) %>
-          </div>
-          <% } %>
-        </div>
-
         <div class="col-md-12">
           <label for="email" class="form-label">Email</label>
           <input
@@ -183,67 +163,11 @@
             <p class="error-message"><%= zodError.message %></p>
             <% } %> <% }) %>
           </div>
-          <% } else { %>
-          <ul class="password-format">
-            <li>One uppercase character [A-Z]</li>
-            <li>One lowercase character [a-z]</li>
-            <li>One number [0-9]</li>
-            <li>8 characters minimum</li>
-            <li>One special character [@, #, $, %, !, ^, &, *]</li>
-          </ul>
-          <% } %>
-        </div>
-
-        <div class="col-md-12">
-          <label for="confirmPassword" class="form-label"
-            >Confirm Password</label
-          >
-          <input
-            type="password"
-            class="form-control"
-            id="confirmPassword"
-            name="confirmPassword"
-            placeholder="Re-enter your password"
-          />
-
-          <% if (locals.zodErrors && locals.zodErrors.length > 0) { %>
-          <div style="display: flex; flex-direction: column; gap: 0.5rem">
-            <% locals.zodErrors.forEach((zodError) => { %> <% if
-            (zodError.path[0] === 'confirmPassword') { %>
-            <p class="error-message"><%= zodError.message %></p>
-            <% } %> <% }) %>
-          </div>
-          <% } %>
-        </div>
-
-        <div class="col-12">
-          <label for="profileImage" class="form-label"
-            >Select your profile image</label
-          >
-          <input type="file" class="form-control" id="profileImage" />
-
-          <% if (locals.zodErrors && locals.zodErrors.length > 0) { %>
-          <div style="display: flex; flex-direction: column; gap: 0.5rem">
-            <% locals.zodErrors.forEach((zodError) => { %> <% if
-            (zodError.path[0] === 'profileImage') { %>
-            <p class="error-message"><%= zodError.message %></p>
-            <% } %> <% }) %>
-          </div>
-          <% } else { %>
-          <p
-            style="
-              margin-block: 0.125rem 0;
-              font-size: 1rem;
-              font-style: italic;
-            "
-          >
-            Maximum upload file size: 5 MB
-          </p>
           <% } %>
         </div>
 
         <div class="col-12" style="margin-top: 1.5rem">
-          <button type="submit" class="btn btn-primary">Sign up</button>
+          <button type="submit" class="btn btn-primary">Sign in</button>
         </div>
       </form>
     </section>
@@ -252,20 +176,17 @@
     <script>
       const togglePassword = document.getElementById("togglePassword");
       const password = document.getElementById("password");
-      const confirmPassword = document.getElementById("confirmPassword");
       const showIcon = document.getElementById("showIcon");
       const hideIcon = document.getElementById("hideIcon");
 
       togglePassword.addEventListener("click", function () {
         if (password.type === "password") {
           password.type = "text";
-          confirmPassword.type = "text";
 
           showIcon.style.display = "none";
           hideIcon.style.display = "inline-flex";
         } else {
           password.type = "password";
-          confirmPassword.type = "password";
 
           showIcon.style.display = "inline-flex";
           hideIcon.style.display = "none";

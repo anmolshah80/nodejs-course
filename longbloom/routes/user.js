@@ -61,7 +61,7 @@ router.post("/signin", async (req, res) => {
     console.log("error: ", error);
 
     if (error instanceof z.ZodError) {
-      return res.status(400).render("login", {
+      return res.status(400).render("signin", {
         zodErrors: JSON.parse(error),
       });
     }
