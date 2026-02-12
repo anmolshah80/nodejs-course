@@ -1,11 +1,13 @@
-const { createHmac } = require("node:crypto");
 const { Router } = require("express");
+const bcrypt = require("bcrypt");
 const z = require("zod");
 
 const User = require("../models/user");
 const { RegisterFormSchema, LoginFormSchema } = require("../lib/schema");
 
 const router = Router();
+
+const BCRYPT_SALT_ROUNDS = 10;
 
 router.get("/signin", (req, res) => {
   return res.render("signin");
@@ -36,12 +38,9 @@ router.post("/signin", async (req, res) => {
       });
     }
 
-    // Source -> https://nodejs.org/api/crypto.html#crypto
-    const hashedPassword = createHmac("sha256", user.salt)
-      .update(password)
-      .digest("hex");
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if (user.password !== hashedPassword) {
+    if (!isPasswordValid) {
       return res.status(401).render("signin", {
         zodErrors: [
           {
@@ -77,10 +76,12 @@ router.post("/signup", async (req, res) => {
   try {
     RegisterFormSchema.parse({ fullName, email, password, confirmPassword });
 
+    const hashedPassword = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
+
     await User.create({
       fullName,
       email,
-      password,
+      password: hashedPassword,
     });
 
     return res.status(201).redirect("/signin");
