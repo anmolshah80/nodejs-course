@@ -17,6 +17,9 @@
 - Cookies and Authorization header in Node.js
 - Authorization in Node.js
 - Create discord bot in Node.js
+- Upload files with Multer in Node.js
+- Setup Node.js blog application project
+- Setup authentication for the blog application
 
 ## Notes
 

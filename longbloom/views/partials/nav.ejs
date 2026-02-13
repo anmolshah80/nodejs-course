@@ -11,7 +11,7 @@
         justify-content: center;
         gap: 0.25rem;
       "
-      href="#"
+      href="/"
       ><svg
         viewBox="0 0 24 24"
         fill="none"
@@ -61,14 +61,13 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
+        <% if (locals.user) { %>
         <li class="nav-item">
-          <a class="nav-link" href="#">Features</a>
+          <a class="nav-link" href="#">Add Blog</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Pricing</a>
-        </li>
+
         <li class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle"
@@ -77,12 +76,21 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            John Doe
+            <%= locals.user.fullName %>
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Logout</a></li>
+            <li><a class="dropdown-item" href="/user/logout">Logout</a></li>
           </ul>
         </li>
+        <% } else { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/signup">Create Account</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/user/signin">Sign in</a>
+        </li>
+        <% } %>
       </ul>
     </div>
   </div>

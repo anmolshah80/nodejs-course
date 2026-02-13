@@ -4,6 +4,8 @@ const z = require("zod");
 
 const User = require("../models/user");
 const { RegisterFormSchema, LoginFormSchema } = require("../lib/schema");
+const { createTokenForUser } = require("../services/authentication");
+const { JWT_TOKEN_NAME } = require("../lib/constants");
 
 const router = Router();
 
@@ -38,6 +40,9 @@ router.post("/signin", async (req, res) => {
       });
     }
 
+    // if using `node:crypto` library to hash password
+    // const token = await User.matchPasswordAndGenerateToken(email, password);
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -52,9 +57,9 @@ router.post("/signin", async (req, res) => {
       });
     }
 
-    // const token = setUser(user);
+    const token = createTokenForUser(user);
 
-    // res.cookie("longbloom-jwt", token);
+    res.cookie(JWT_TOKEN_NAME, token);
 
     return res.redirect("/");
   } catch (error) {
@@ -96,6 +101,11 @@ router.post("/signup", async (req, res) => {
 
     return res.status(500).render("internal-server-error");
   }
+});
+
+router.get("/logout", (req, res) => {
+  // clear the cookie
+  res.clearCookie(JWT_TOKEN_NAME).redirect("/");
 });
 
 module.exports = router;
