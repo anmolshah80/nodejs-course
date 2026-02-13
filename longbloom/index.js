@@ -1,8 +1,14 @@
+require("dotenv").config();
 const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
+var cookieParser = require("cookie-parser");
 
 const userRoute = require("./routes/user");
+const {
+  checkForAuthenticationCookie,
+} = require("./middlewares/authentication");
+const { JWT_TOKEN_NAME } = require("./lib/constants");
 
 const app = express();
 
@@ -19,11 +25,15 @@ app.set("views", path.resolve("./views"));
 app.use(express.urlencoded({ extended: false }));
 // Source - https://stackoverflow.com/a/32303676
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cookieParser());
+app.use(checkForAuthenticationCookie(JWT_TOKEN_NAME));
 
 app.use("/user", userRoute);
 
 app.get("/", (req, res, next) => {
-  res.render("home");
+  res.render("home", {
+    user: req.user,
+  });
 });
 
 app.listen(PORT, () =>
