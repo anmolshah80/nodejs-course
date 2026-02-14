@@ -5,7 +5,18 @@
     <title>LongBloom</title>
   </head>
   <body>
-    <%- include('./partials/nav') %>
+    <%- include('./partials/nav') %> <% if (locals.submissionStatus &&
+    locals.submissionStatus.message === 'successful') { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      Your blog has been created!
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    <% } %>
 
     <h1>Blogs</h1>
 

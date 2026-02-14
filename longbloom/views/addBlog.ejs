@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head') %>
+    <title>Create a blog | LongBloom</title>
+  </head>
+
+  <style>
+    .row > * {
+      padding-inline: 0;
+    }
+
+    .error-message > p {
+      margin: 0;
+    }
+
+    @media (min-width: 320px) {
+      .error-message {
+        color: oklch(63.7% 0.237 25.331);
+        font-size: 0.9rem;
+        font-weight: bold;
+        margin-block: 0.25rem 0;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .error-message {
+        font-size: 1rem;
+      }
+    }
+  </style>
+  <body>
+    <%- include('./partials/nav') %>
+
+    <div
+      class="alert alert-warning alert-dismissible fade d-none"
+      role="alert"
+      id="emptyTitleAlert"
+    >
+      Please enter the blog title to generate slug
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        onclick="this.closest('.alert').classList.add('d-none')"
+      ></button>
+    </div>
+
+    <section
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.25rem;
+        flex-direction: column;
+        padding: 1.5rem 1rem;
+        gap: 0.5rem;
+      "
+    >
+      <h1
+        style="
+          font-size: 3.5rem;
+          font-weight: bold;
+          text-align: center;
+          margin-bottom: 0;
+        "
+      >
+        Create Blog
+      </h1>
+
+      <form
+        action="/blogs/create"
+        method="post"
+        class="row g-3"
+        style="
+          max-width: 600px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto;
+          inset: 0;
+        "
+        id="createBlogForm"
+      >
+        <div class="col-md-12">
+          <label class="form-label" for="title">Title</label>
+          <input
+            type="text"
+            name="title"
+            id="title"
+            class="form-control"
+            placeholder="10 Best Coffee Shops in New York"
+          />
+
+          <% if (locals.zodErrors && locals.zodErrors.length > 0) { %>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem">
+            <% locals.zodErrors.forEach((zodError) => { %> <% if
+            (zodError.path[0] === 'title') { %>
+            <p class="error-message"><%= zodError.message %></p>
+            <% } %> <% }) %>
+          </div>
+          <% } %>
+        </div>
+
+        <div class="col-md-12" style="position: relative">
+          <label class="form-label" for="slug">Slug</label>
+          <input
+            type="text"
+            name="slug"
+            id="slug"
+            class="form-control"
+            placeholder="10-best-coffee-shops-new-york"
+          />
+
+          <button
+            class="btn btn-outline-primary"
+            style="
+              position: absolute;
+              right: 0;
+              top: -0.3rem;
+              padding-inline: 0.5rem;
+              padding-block: 0.25rem;
+            "
+            id="generateSlugButton"
+          >
+            Generate Slug
+          </button>
+
+          <% if (locals.zodErrors && locals.zodErrors.length > 0) { %>
+          <div style="display: flex; flex-direction: column; gap: 0.125rem">
+            <% locals.zodErrors.forEach((zodError) => { %> <% if
+            (zodError.path[0] === 'slug') { %>
+            <p class="error-message"><%= zodError.message %></p>
+            <% } %> <% }) %>
+          </div>
+          <% } else { %>
+          <p
+            style="
+              margin-block: 0.125rem 0;
+              font-size: 1rem;
+              font-style: italic;
+            "
+          >
+            Slug is the URL-friendly version of the title. It should be
+            lowercase, with words separated by hyphens. For e.g., if your title
+            is "First Blog Post", a good slug would be "first-blog-post".
+          </p>
+          <% } %>
+        </div>
+
+        <div class="col-md-12">
+          <label for="description" class="form-label">Description</label>
+          <textarea
+            class="form-control"
+            placeholder="Type your blog details here"
+            id="description"
+            style="min-height: 12rem"
+            name="description"
+          ></textarea>
+
+          <% if (locals.zodErrors && locals.zodErrors.length > 0) { %>
+          <div style="display: flex; flex-direction: column; gap: 0.125rem">
+            <% locals.zodErrors.forEach((zodError) => { %> <% if
+            (zodError.path[0] === 'description') { %>
+            <p class="error-message"><%= zodError.message %></p>
+            <% } %> <% }) %>
+          </div>
+          <% } %>
+        </div>
+
+        <div class="col-12">
+          <label for="coverImage" class="form-label"
+            >Select your blog cover image</label
+          >
+          <input type="file" class="form-control" id="coverImage" />
+
+          <% if (locals.zodErrors && locals.zodErrors.length > 0) { %>
+          <div style="display: flex; flex-direction: column; gap: 0.125rem">
+            <% locals.zodErrors.forEach((zodError) => { %> <% if
+            (zodError.path[0] === 'coverImage') { %>
+            <p class="error-message"><%= zodError.message %></p>
+            <% } %> <% }) %>
+          </div>
+          <% } else { %>
+          <p
+            style="
+              margin-block: 0.125rem 0;
+              font-size: 1rem;
+              font-style: italic;
+            "
+          >
+            Maximum upload file size: 5 MB
+          </p>
+          <% } %>
+        </div>
+
+        <div class="col-12" style="margin-top: 1.5rem">
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+      </form>
+    </section>
+
+    <%- include('./partials/scripts') %>
+
+    <script>
+      const titleInput = document.getElementById("title");
+      const slugInput = document.getElementById("slug");
+      const generateSlugButton = document.getElementById("generateSlugButton");
+      const emptyTitleAlert = document.getElementById("emptyTitleAlert");
+
+      function generateSlugFromTitle(rawTitle) {
+        if (!rawTitle) return "";
+
+        let s = rawTitle.trim().toLowerCase();
+
+        // common leading question/imperative phrases and articles to remove
+        const patterns = [
+          "what's",
+          "whats",
+          "what is",
+          "what are",
+          "what",
+          "how to",
+          "how do",
+          "how can",
+          "how",
+          "why is",
+          "why are",
+          "why",
+          "when is",
+          "when",
+          "where is",
+          "where",
+          "who is",
+          "who",
+          "is",
+          "are",
+          "do",
+          "does",
+          "can",
+          "should",
+          "could",
+          "will",
+          "would",
+          "the",
+          "a",
+          "an",
+        ];
+
+        // build a regex that matches any of the patterns at the start, allowing
+        // for trailing punctuation/whitespace (e.g., "What is:") and remove
+        // repeatedly to handle combinations like "What is the..."
+        const escaped = patterns
+          .map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+          .join("|");
+
+        const leadingRe = new RegExp(
+          "^(" +
+            escaped +
+            ")(?:[\\s\"'\\u2018\\u2019\\u201C\\u201D.?!:;\\-()]+)?",
+          "i",
+        );
+
+        while (leadingRe.test(s)) {
+          s = s.replace(leadingRe, "").trim();
+        }
+
+        // normalize: replace non-alphanumeric groups with hyphen and trim
+        s = s.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
+        return s;
+      }
+
+      generateSlugButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        const title = titleInput.value;
+
+        if (!title || title.trim().length === 0) {
+          // Show the Bootstrap alert
+          emptyTitleAlert.classList.remove("d-none");
+          emptyTitleAlert.classList.add("show");
+
+          return;
+        }
+
+        // Hide the alert if it was visible
+        emptyTitleAlert.classList.add("d-none");
+        emptyTitleAlert.classList.remove("show");
+
+        slugInput.value = generateSlugFromTitle(title);
+      });
+    </script>
+  </body>
+</html>
