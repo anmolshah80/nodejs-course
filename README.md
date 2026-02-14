@@ -68,3 +68,7 @@
   - Run Format Document
   - Parser should now be `html`, not `angular`
 - [GitHub Gist](https://gist.github.com/anmolshah80/cabacdc81ac6f315887da10efcea7834)
+
+## To-dos
+
+- Render character count details in create blog form fields
