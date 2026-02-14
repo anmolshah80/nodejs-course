@@ -71,6 +71,7 @@
       <form
         action="/blogs/create"
         method="post"
+        enctype="multipart/form-data"
         class="row g-3"
         style="
           max-width: 600px;
@@ -172,7 +173,12 @@
           <label for="coverImage" class="form-label"
             >Select your blog cover image</label
           >
-          <input type="file" class="form-control" id="coverImage" />
+          <input
+            type="file"
+            class="form-control"
+            name="coverImage"
+            id="coverImage"
+          />
 
           <% if (locals.zodErrors && locals.zodErrors.length > 0) { %>
           <div style="display: flex; flex-direction: column; gap: 0.125rem">

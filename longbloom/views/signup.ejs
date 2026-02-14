@@ -83,6 +83,7 @@
       <form
         action="/user/signup"
         method="post"
+        enctype="multipart/form-data"
         class="row g-3"
         style="
           max-width: 600px;
@@ -220,7 +221,12 @@
           <label for="profileImage" class="form-label"
             >Select your profile image</label
           >
-          <input type="file" class="form-control" id="profileImage" />
+          <input
+            type="file"
+            class="form-control"
+            id="profileImage"
+            name="profileImage"
+          />
 
           <% if (locals.zodErrors && locals.zodErrors.length > 0) { %>
           <div style="display: flex; flex-direction: column; gap: 0.5rem">

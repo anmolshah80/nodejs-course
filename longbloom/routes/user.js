@@ -1,6 +1,9 @@
 const { Router } = require("express");
 const bcrypt = require("bcrypt");
 const z = require("zod");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 const User = require("../models/user");
 const { RegisterFormSchema, LoginFormSchema } = require("../lib/schema");
@@ -10,6 +13,25 @@ const { JWT_TOKEN_NAME } = require("../lib/constants");
 const router = Router();
 
 const BCRYPT_SALT_ROUNDS = 10;
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // define the path to the user's directory
+    const userDir = path.resolve("./public/uploads/profileImages");
+
+    // create the directory if it doesn't exist
+    fs.mkdirSync(userDir, { recursive: true });
+
+    cb(null, userDir);
+  },
+  filename: function (req, file, cb) {
+    const fileName = `${Date.now()}-profile-${file.originalname}`;
+
+    cb(null, fileName);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 router.get("/signin", (req, res) => {
   return res.render("signin");
@@ -75,11 +97,20 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-router.post("/signup", async (req, res) => {
-  const { fullName, email, password, confirmPassword } = req.body;
+router.post("/signup", upload.single("profileImage"), async (req, res) => {
+  const { fullName, email, password, confirmPassword, profileImage } = req.body;
+
+  console.log("req.body: ", req.body);
+  console.log("req.file: ", req.file);
 
   try {
-    RegisterFormSchema.parse({ fullName, email, password, confirmPassword });
+    RegisterFormSchema.parse({
+      fullName,
+      email,
+      password,
+      confirmPassword,
+      profileImage,
+    });
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
 
@@ -87,9 +118,10 @@ router.post("/signup", async (req, res) => {
       fullName,
       email,
       password: hashedPassword,
+      profileImageURL: `uploads/profileImages/${req.file.filename}`,
     });
 
-    return res.status(201).redirect("/signin");
+    return res.status(201).redirect("/user/signin");
   } catch (error) {
     console.log("error: ", error);
 

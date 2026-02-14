@@ -1,11 +1,32 @@
 const { Router } = require("express");
 const z = require("zod");
-const mongoose = require("mongoose");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 const Blog = require("../models/blog");
 const { CreateBlogFormSchema } = require("../lib/schema");
 
 const router = Router();
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // define the path to the user's directory
+    const userDir = path.join("./public/uploads", req.user._id);
+
+    // create the directory if it doesn't exist
+    fs.mkdirSync(userDir, { recursive: true });
+
+    cb(null, userDir);
+  },
+  filename: function (req, file, cb) {
+    const fileName = `${Date.now()}-cover-${file.originalname}`;
+
+    cb(null, fileName);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 router.get("/create", (req, res) => {
   return res.render("addBlog", {
@@ -13,8 +34,11 @@ router.get("/create", (req, res) => {
   });
 });
 
-router.post("/create", async (req, res) => {
+router.post("/create", upload.single("coverImage"), async (req, res) => {
   const { title, description, slug, coverImage } = req.body;
+
+  console.log("req.body: ", req.body);
+  console.log("req.file: ", req.file);
 
   try {
     CreateBlogFormSchema.parse({ title, description, slug, coverImage });
@@ -23,7 +47,9 @@ router.post("/create", async (req, res) => {
       title,
       description,
       slug,
-      coverImageURL: coverImage,
+      coverImageURL: req.file
+        ? `uploads/${req.user._id}/${req.file.filename}`
+        : undefined,
       createdBy: req.user._id,
     });
 
