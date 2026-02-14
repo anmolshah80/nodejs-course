@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 var cookieParser = require("cookie-parser");
 
 const userRoute = require("./routes/user");
+const blogRoute = require("./routes/blog");
 const {
   checkForAuthenticationCookie,
 } = require("./middlewares/authentication");
@@ -29,6 +30,7 @@ app.use(cookieParser());
 app.use(checkForAuthenticationCookie(JWT_TOKEN_NAME));
 
 app.use("/user", userRoute);
+app.use("/blogs", blogRoute);
 
 app.get("/", (req, res, next) => {
   res.render("home", {

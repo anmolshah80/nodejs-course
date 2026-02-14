@@ -42,7 +42,40 @@ const LoginFormSchema = z.object({
   password: passwordSchema,
 });
 
+const CreateBlogFormSchema = z.object({
+  title: z
+    .string({ error: "Title is required" })
+    .min(10, {
+      error: "Title should at least be 10 characters long",
+    })
+    .max(70, {
+      error: "Title cannot be more than 70 characters",
+    }),
+  description: z
+    .string({
+      error: "Description is required",
+    })
+    .min(70, {
+      error: "Description should at least be 70 characters long",
+    })
+    .max(500, {
+      error: "Description cannot be more than 500 characters",
+    }),
+  slug: z
+    .string({
+      error: "Slug is required",
+    })
+    .min(3, {
+      error: "Slug should at least be 3 characters long",
+    })
+    .max(70, {
+      error: "Slug cannot be more than 70 characters",
+    }),
+  coverImage: z.string().optional(),
+});
+
 module.exports = {
   RegisterFormSchema,
   LoginFormSchema,
+  CreateBlogFormSchema,
 };
