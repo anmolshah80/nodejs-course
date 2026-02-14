@@ -40,6 +40,19 @@ router.post("/create", upload.single("coverImage"), async (req, res) => {
   console.log("req.body: ", req.body);
   console.log("req.file: ", req.file);
 
+  // 5 MB -> 5242880 bytes
+  if (req.file?.size > 5242880) {
+    return res.status(400).render("signup", {
+      zodErrors: [
+        {
+          code: "custom",
+          path: ["coverImage"],
+          message: "Cover image size should be less than 5 MB",
+        },
+      ],
+    });
+  }
+
   try {
     CreateBlogFormSchema.parse({ title, description, slug, coverImage });
 

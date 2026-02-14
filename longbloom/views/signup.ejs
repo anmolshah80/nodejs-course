@@ -44,6 +44,20 @@
   <body>
     <%- include('./partials/nav') %>
 
+    <div
+      class="alert alert-warning alert-dismissible fade d-none"
+      role="alert"
+      id="emptyTitleAlert"
+    >
+      File size exceeds 5 MB. Please select a smaller file.
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        onclick="this.closest('.alert').classList.add('d-none')"
+      ></button>
+    </div>
+
     <section
       style="
         display: flex;
@@ -93,7 +107,6 @@
           margin: 0 auto;
           inset: 0;
         "
-        id="signupForm"
       >
         <div class="col-md-12">
           <label class="form-label" for="fullName">Full Name</label>
@@ -226,6 +239,7 @@
             class="form-control"
             id="profileImage"
             name="profileImage"
+            accept="image/*, .png, .jpg, .jpeg"
           />
 
           <% if (locals.zodErrors && locals.zodErrors.length > 0) { %>
@@ -276,6 +290,46 @@
           showIcon.style.display = "inline-flex";
           hideIcon.style.display = "none";
         }
+      });
+    </script>
+
+    <script>
+      const profileImageFileInput = document.getElementById("profileImage");
+      const emptyTitleAlert = document.getElementById("emptyTitleAlert");
+
+      profileImageFileInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+
+        console.log("file: ", file);
+        console.log("file.size: ", file.size);
+        console.log("event.target.files: ", event.target.files);
+
+        // 5 MB -> 5242880 bytes
+        if (file && file.size > 5242880) {
+          // Show the Bootstrap alert
+          emptyTitleAlert.classList.remove("d-none");
+          emptyTitleAlert.classList.add("show");
+
+          // empty the file input to prevent form submission with the invalid file
+          profileImageFileInput.value = "";
+
+          return;
+        }
+
+        // Hide the alert if it was visible
+        emptyTitleAlert.classList.add("d-none");
+        emptyTitleAlert.classList.remove("show");
+
+        profileImageFileInput.files = event.target.files;
+
+        console.log("Selected file in: ", profileImageFileInput.files[0]);
+
+        console.log(
+          "profileImageFileInput.files in: ",
+          profileImageFileInput.files,
+        );
+
+        console.log("profileImageFileInput in: ", profileImageFileInput);
       });
     </script>
   </body>

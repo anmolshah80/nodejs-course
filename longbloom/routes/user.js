@@ -103,6 +103,19 @@ router.post("/signup", upload.single("profileImage"), async (req, res) => {
   console.log("req.body: ", req.body);
   console.log("req.file: ", req.file);
 
+  // 5 MB -> 5242880 bytes
+  if (req.file?.size > 5242880) {
+    return res.status(400).render("signup", {
+      zodErrors: [
+        {
+          code: "custom",
+          path: ["profileImage"],
+          message: "Profile image size should be less than 5 MB",
+        },
+      ],
+    });
+  }
+
   try {
     RegisterFormSchema.parse({
       fullName,
@@ -118,7 +131,9 @@ router.post("/signup", upload.single("profileImage"), async (req, res) => {
       fullName,
       email,
       password: hashedPassword,
-      profileImageURL: `uploads/profileImages/${req.file.filename}`,
+      profileImageURL: req.file
+        ? `uploads/profileImages/${req.file.filename}`
+        : undefined,
     });
 
     return res.status(201).redirect("/user/signin");

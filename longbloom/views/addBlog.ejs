@@ -81,7 +81,6 @@
           margin: 0 auto;
           inset: 0;
         "
-        id="createBlogForm"
       >
         <div class="col-md-12">
           <label class="form-label" for="title">Title</label>
@@ -178,6 +177,7 @@
             class="form-control"
             name="coverImage"
             id="coverImage"
+            accept="image/*, .png, .jpg, .jpeg"
           />
 
           <% if (locals.zodErrors && locals.zodErrors.length > 0) { %>
@@ -294,6 +294,43 @@
         emptyTitleAlert.classList.remove("show");
 
         slugInput.value = generateSlugFromTitle(title);
+      });
+
+      const coverImageFileInput = document.getElementById("coverImage");
+
+      coverImageFileInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+
+        console.log("file: ", file);
+        console.log("file.size: ", file.size);
+        console.log("event.target.files: ", event.target.files);
+
+        // 5 MB -> 5242880 bytes
+        if (file && file.size > 5242880) {
+          // Show the Bootstrap alert
+          emptyTitleAlert.classList.remove("d-none");
+          emptyTitleAlert.classList.add("show");
+
+          // empty the file input to prevent form submission with the invalid file
+          coverImageFileInput.value = "";
+
+          return;
+        }
+
+        // Hide the alert if it was visible
+        emptyTitleAlert.classList.add("d-none");
+        emptyTitleAlert.classList.remove("show");
+
+        coverImageFileInput.files = event.target.files;
+
+        console.log("Selected file in: ", coverImageFileInput.files[0]);
+
+        console.log(
+          "coverImageFileInput.files in: ",
+          coverImageFileInput.files,
+        );
+
+        console.log("coverImageFileInput in: ", coverImageFileInput);
       });
     </script>
   </body>
